@@ -15,7 +15,7 @@ public class App
     public static void main( String[] args )
     {
         try {
-            File myObj = new File("filename.txt");
+            File myObj = new File("input.log");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
