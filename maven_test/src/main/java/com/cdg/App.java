@@ -1,5 +1,7 @@
 package com.cdg;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;  // Import the File class
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;  // Import the IOException class to handle error
@@ -8,38 +10,46 @@ import java.util.Scanner; // Import the Scanner class to read text files
 
 /**
  * Hello world!
- *
  */
 public class App {
     public static void main(String[] args) {
-        String data;
+        String data = "";
+        int serverCodeCount10 = 0;
+        int serverCodeCount200 = 0;
+        int serverCodeCount404 = 0;
         try {
             File myObj = new File("input.log");
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 data = myReader.nextLine();
+
+                serverCodeCount10 = serverCodeCount10 + StringUtils.countMatches(data, "[10]");
+                serverCodeCount200 = serverCodeCount200 + StringUtils.countMatches(data, "[200]");
+                serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(data, "[404]");
+
                 System.out.println(data);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
+            System.out.println("찾는 파일이 없어요!");
             e.printStackTrace();
         }
 
         try {
             File myObj = new File("output.log");
             if (myObj.createNewFile()) {
-                System.out.println("File created: " + myObj.getName());
+                System.out.println("파일을 생성했어요!: " + myObj.getName());
             } else {
-                System.out.println("File already exists.");
+                System.out.println("이미 존재하는 파일입니다.");
             }
+
             FileWriter myWriter = new FileWriter("output.log");
 
             myWriter.write("최다호출 APIKEY\n\n");
             myWriter.write("상태코드 별 횟수\n\n" +
-                    "10 : " + "\n" +
-                    "200 : " + "\n" +
-                    "404 : " + "\n\n");
+                    "10 : " + serverCodeCount10 + "\n" +
+                    "200 : " + serverCodeCount200 + "\n" +
+                    "404 : " + serverCodeCount404 + "\n\n");
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
                     "blog : " + "\n" +
                     "vdip : " + "\n" +
@@ -52,10 +62,11 @@ public class App {
                     "Chrome : " + "\n" +
                     "Opera : " + "\n\n");
 
+
             myWriter.close();
-            System.out.println("Successfully wrote to the file.");
+            System.out.println("변경사항을 저장했어요!");
         } catch (IOException e) {
-            System.out.println("An error occurred.");
+            System.out.println("문제가 발생했어요.");
             e.printStackTrace();
         }
     }
