@@ -70,7 +70,7 @@ public class App {
                     "blog : " + "\n" +
                     "vdip : " + "\n" +
                     "image : " + "\n\n");
-            myWriter.write("피크 시간대\n\n" + peakTime);
+            myWriter.write("피크 시간대\n\n" + peakTime + "\n\n");
             myWriter.write("웹 브라우저 별 사용비율\n\n" + webBrowser + "\n" +
                     "IE : " + "\n" +
                     "Firefox : " + "\n" +
