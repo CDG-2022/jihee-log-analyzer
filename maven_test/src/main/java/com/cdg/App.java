@@ -7,15 +7,16 @@ import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;  // Import the IOException class to handle error
 import java.io.FileNotFoundException;  // Import this class to handle errors
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Hello world!
  */
 public class App {
-    private static HashMap<String, Integer> apiKey = new HashMap<>();
-    private static HashMap<String, Integer> apiService = new HashMap<>();
-    private static HashMap<String, Integer> peakTime = new HashMap<>();
-    private static HashMap<String, Integer> webBrowser = new HashMap<>();
+    private static final Map<String, Integer> apiKey = new HashMap<>();
+    private static final Map<String, Integer> apiService = new HashMap<>();
+    private static final Map<String, Integer> peakTime = new HashMap<>();
+    private static final Map<String, Integer> webBrowser = new HashMap<>();
 
     public static void main(String[] args) {
         String data = "";
@@ -49,6 +50,16 @@ public class App {
             e.printStackTrace();
         }
 
+        Map<String, Integer> orderedMap = peakTime.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
+
+        // 앞에서 3개를 꺼낸다.
+        final Iterator<Map.Entry<String, Integer>> entryIterator = orderedMap.entrySet().iterator();
+        System.out.println(entryIterator.next().getKey());
+
+
         try {
             File myObj = new File("output.log");
             if (myObj.createNewFile()) {
@@ -70,7 +81,7 @@ public class App {
                     "blog : " + "\n" +
                     "vdip : " + "\n" +
                     "image : " + "\n\n");
-            myWriter.write("피크 시간대\n\n" + peakTime + "\n\n");
+            myWriter.write("피크 시간대\n\n" + entryIterator.next().getKey() + "\n\n");
             myWriter.write("웹 브라우저 별 사용비율\n\n" + webBrowser + "\n" +
                     "IE : " + "\n" +
                     "Firefox : " + "\n" +
