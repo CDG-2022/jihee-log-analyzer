@@ -1,4 +1,4 @@
-package com.cdg.output;
+package output;
 
 public class Writer {
 }

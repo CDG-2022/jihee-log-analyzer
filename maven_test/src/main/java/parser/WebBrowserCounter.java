@@ -1,4 +1,4 @@
-package com.cdg.parser;
+package parser;
 
 public class WebBrowserCounter {
 }
