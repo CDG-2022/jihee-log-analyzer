@@ -55,7 +55,6 @@ public class App {
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
 
-        // 앞에서 3개를 꺼낸다.
         final Iterator<Map.Entry<String, Integer>> entryIterator = orderedMap.entrySet().iterator();
         System.out.println(entryIterator.next().getKey());
 
