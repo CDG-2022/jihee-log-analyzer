@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
  * Hello world!
  */
 public class App {
-    private static final Map<String, Integer> apiKey = new HashMap<>();
-    private static final Map<String, Integer> apiService = new HashMap<>();
-    private static final Map<String, Integer> peakTime = new HashMap<>();
-    private static final Map<String, Integer> webBrowser = new HashMap<>();
+    private static final Map<String, Integer> API_KEY = new HashMap<>();
+    private static final Map<String, Integer> API_SERVICE = new HashMap<>();
+    private static final Map<String, Integer> PEAK_TIME = new HashMap<>();
+    private static final Map<String, Integer> WEB_BROWSER = new HashMap<>();
 
     public static void main(String[] args) {
         String data = "";
@@ -36,10 +36,10 @@ public class App {
                 serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(data, "[404]");
 
                 String[] arrayData = StringUtils.substringsBetween(data, "[", "]");
-                apiKey.put(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), apiKey.getOrDefault(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), 0) + 1);
-                apiService.put(StringUtils.substringBetween(arrayData[1], "search/", "?"), apiService.getOrDefault(StringUtils.substringBetween(arrayData[1], "search/", "?"), 0) + 1);
-                peakTime.put(arrayData[3].substring(0, arrayData[3].length()-3), peakTime.getOrDefault(arrayData[3].substring(0, arrayData[3].length()-3), 0) + 1);
-                webBrowser.put(arrayData[2], webBrowser.getOrDefault(arrayData[2], 0) + 1);
+                API_KEY.put(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), API_KEY.getOrDefault(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), 0) + 1);
+                API_SERVICE.put(StringUtils.substringBetween(arrayData[1], "search/", "?"), API_SERVICE.getOrDefault(StringUtils.substringBetween(arrayData[1], "search/", "?"), 0) + 1);
+                PEAK_TIME.put(arrayData[3].substring(0, arrayData[3].length()-3), PEAK_TIME.getOrDefault(arrayData[3].substring(0, arrayData[3].length()-3), 0) + 1);
+                WEB_BROWSER.put(arrayData[2], WEB_BROWSER.getOrDefault(arrayData[2], 0) + 1);
 
                 logCount++;
                 System.out.println(data);
@@ -50,7 +50,7 @@ public class App {
             e.printStackTrace();
         }
 
-        Map<String, Integer> orderedMap = peakTime.entrySet()
+        Map<String, Integer> orderedMap = PEAK_TIME.entrySet()
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
@@ -71,17 +71,17 @@ public class App {
 
             myWriter.write("로그 수: " + logCount + "\n\n");
 
-            myWriter.write("최다호출 APIKEY"+ "\n\n" + apiKey + "\n\n");
+            myWriter.write("최다호출 APIKEY"+ "\n\n" + API_KEY + "\n\n");
             myWriter.write("상태코드 별 횟수\n\n" +
                     "10 : " + serverCodeCount10 + "\n" +
                     "200 : " + serverCodeCount200 + "\n" +
                     "404 : " + serverCodeCount404 + "\n\n");
-            myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" + apiService + "\n" +
+            myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" + API_SERVICE + "\n" +
                     "blog : " + "\n" +
                     "vdip : " + "\n" +
                     "image : " + "\n\n");
             myWriter.write("피크 시간대\n\n" + entryIterator.next().getKey() + "\n\n");
-            myWriter.write("웹 브라우저 별 사용비율\n\n" + webBrowser + "\n" +
+            myWriter.write("웹 브라우저 별 사용비율\n\n" + WEB_BROWSER + "\n" +
                     "IE : " + "\n" +
                     "Firefox : " + "\n" +
                     "Safari : " + "\n" +
