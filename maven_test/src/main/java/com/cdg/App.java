@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
  * Hello world!
  */
 public class App {
+
+    private static final String INPUT_FILE = "input.log";
+    private static final String OUTPUT_FILE = "output.log";
+
     private static final Map<String, Integer> API_KEY = new HashMap<>();
     private static final Map<String, Integer> API_SERVICE = new HashMap<>();
     private static final Map<String, Integer> PEAK_TIME = new HashMap<>();
@@ -26,7 +30,7 @@ public class App {
         int serverCodeCount404 = 0;
 
         try {
-            File myObj = new File("input.log");
+            File myObj = new File(INPUT_FILE);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 data = myReader.nextLine();
@@ -95,14 +99,14 @@ public class App {
 
 
         try {
-            File myObj = new File("output.log");
+            File myObj = new File(OUTPUT_FILE);
             if (myObj.createNewFile()) {
                 System.out.println("파일을 생성했어요!: " + myObj.getName());
             } else {
                 System.out.println("이미 존재하는 파일입니다.");
             }
 
-            FileWriter myWriter = new FileWriter("output.log");
+            FileWriter myWriter = new FileWriter(OUTPUT_FILE);
 
             myWriter.write("로그 수: " + logCount + "\n\n");
 
