@@ -81,22 +81,24 @@ public class App {
         Map.Entry<String, Integer> entryAPIService1 = entryIteratorAPIService.next();
         Map.Entry<String, Integer> entryAPIService2 = entryIteratorAPIService.next();
         Map.Entry<String, Integer> entryAPIService3 = entryIteratorAPIService.next();
-        final String APIServiceForWrite1 = entryAPIService1.getKey() + " : " + entryAPIService1.getValue();
-        final String APIServiceForWrite2 = entryAPIService2.getKey() + " : " + entryAPIService2.getValue();
-        final String APIServiceForWrite3 = entryAPIService3.getKey() + " : " + entryAPIService3.getValue();
-        System.out.println(API_SERVICE);
-
+        final String APIServiceForWrite = entryAPIService1.getKey() + " : " + entryAPIService1.getValue() +
+                "\n" + entryAPIService2.getKey() + " : " + entryAPIService2.getValue() +
+                "\n" + entryAPIService3.getKey() + " : " + entryAPIService3.getValue();
 
         final Iterator<Map.Entry<String, Integer>> entryIteratorPeakTime = orderedMapPeakTime.entrySet().iterator();
         final String peakTimeForWrite = entryIteratorPeakTime.next().getKey();
 
-
         final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedMapWebBrowser.entrySet().iterator();
         final String webBrowserForWrite = entryIteratorWebBrowser.next().getKey();
+        Map.Entry<String, Integer> entryWebBrowser1 = entryIteratorWebBrowser.next();
+
+        double sample =(double)Math.round(((double)(entryWebBrowser1.getValue())/(double)((logCount))*100)*100)/100;
+        System.out.println(webBrowserForWrite + " " + sample + " " + webBrowserForWrite);
+
+        System.out.println(webBrowserForWrite + entryIteratorWebBrowser.next().getValue());
 
 
-
-
+        System.out.println("웹 브라우저 별 사용비율\n\n" + orderedMapWebBrowser + "\n");
 
         try {
             File myObj = new File(OUTPUT_FILE);
@@ -116,16 +118,14 @@ public class App {
                     "200 : " + serverCodeCount200 + "\n" +
                     "404 : " + serverCodeCount404 + "\n\n");
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
-                    APIServiceForWrite1 + "\n" +
-                    APIServiceForWrite2 + "\n" +
-                    APIServiceForWrite3 + "\n\n");
+                    APIServiceForWrite + "\n\n");
             myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
-            myWriter.write("웹 브라우저 별 사용비율\n\n" + WEB_BROWSER + "\n" +
+            myWriter.write("웹 브라우저 별 사용비율\n\n" + orderedMapWebBrowser + "\n" +
                     "IE : " + "\n" +
                     "Firefox : " + "\n" +
                     "Safari : " + "\n" +
                     "Chrome : " + "\n" +
-                    "Opera : " + "\n\n");
+                    "Opera : ");
 
             myWriter.close();
             System.out.println("변경사항을 저장했어요!");

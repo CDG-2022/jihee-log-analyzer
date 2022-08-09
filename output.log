@@ -22,10 +22,9 @@ blog : 826
 
 웹 브라우저 별 사용비율
 
-{Safari=102, Chrome=139, IE=4267, Opera=155, Firefox=337}
+{IE=4267, Firefox=337, Opera=155, Chrome=139, Safari=102}
 IE : 
 Firefox : 
 Safari : 
 Chrome : 
 Opera : 
-
