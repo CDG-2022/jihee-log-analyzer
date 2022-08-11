@@ -1,6 +1,7 @@
 package com.cdg;
 
 import org.apache.commons.lang3.StringUtils;
+import parser.Parser;
 
 import java.io.File;  // Import the File class
 import java.io.FileWriter;   // Import the FileWriter class
@@ -35,6 +36,10 @@ public class App {
             while (myReader.hasNextLine()) {
                 data = myReader.nextLine();
 
+                Parser parser = new Parser();
+                parser.parse(data);
+
+
                 serverCodeCount10 = serverCodeCount10 + StringUtils.countMatches(data, "[10]");
                 serverCodeCount200 = serverCodeCount200 + StringUtils.countMatches(data, "[200]");
                 serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(data, "[404]");
@@ -54,30 +59,15 @@ public class App {
             e.printStackTrace();
         }
 
-        Map<String, Integer> orderedMapApiKey = API_KEY.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
+        Map<String, Integer> orderedApiKeyMap = makeOrderedMap(API_KEY);
+        Map<String, Integer> orderedApiServiceMap = makeOrderedMap(API_SERVICE);
+        Map<String, Integer> orderedPeakTimeMap = makeOrderedMap(PEAK_TIME);
+        Map<String, Integer> orderedWebBrowserMap = makeOrderedMap(WEB_BROWSER);
 
-        Map<String, Integer> orderedMapAPIService = API_SERVICE.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
-
-        Map<String, Integer> orderedMapPeakTime = PEAK_TIME.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
-
-        Map<String, Integer> orderedMapWebBrowser = WEB_BROWSER.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
-
-        final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedMapApiKey.entrySet().iterator();
+        final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedApiKeyMap.entrySet().iterator();
         final String apiKeyForWrite = entryIteratorApiKey.next().getKey();
 
-        final Iterator<Map.Entry<String, Integer>> entryIteratorAPIService = orderedMapAPIService.entrySet().iterator();
+        final Iterator<Map.Entry<String, Integer>> entryIteratorAPIService = orderedApiServiceMap.entrySet().iterator();
         Map.Entry<String, Integer> entryAPIService1 = entryIteratorAPIService.next();
         Map.Entry<String, Integer> entryAPIService2 = entryIteratorAPIService.next();
         Map.Entry<String, Integer> entryAPIService3 = entryIteratorAPIService.next();
@@ -85,10 +75,10 @@ public class App {
                 "\n" + entryAPIService2.getKey() + " : " + entryAPIService2.getValue() +
                 "\n" + entryAPIService3.getKey() + " : " + entryAPIService3.getValue();
 
-        final Iterator<Map.Entry<String, Integer>> entryIteratorPeakTime = orderedMapPeakTime.entrySet().iterator();
+        final Iterator<Map.Entry<String, Integer>> entryIteratorPeakTime = orderedPeakTimeMap.entrySet().iterator();
         final String peakTimeForWrite = entryIteratorPeakTime.next().getKey();
 
-        final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedMapWebBrowser.entrySet().iterator();
+        final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedWebBrowserMap.entrySet().iterator();
         final String webBrowserForWrite = entryIteratorWebBrowser.next().getKey();
         Map.Entry<String, Integer> entryWebBrowser1 = entryIteratorWebBrowser.next();
 
@@ -98,7 +88,7 @@ public class App {
         System.out.println(webBrowserForWrite + entryIteratorWebBrowser.next().getValue());
 
 
-        System.out.println("웹 브라우저 별 사용비율\n\n" + orderedMapWebBrowser + "\n");
+        System.out.println("웹 브라우저 별 사용비율\n\n" + orderedWebBrowserMap + "\n");
 
         try {
             File myObj = new File(OUTPUT_FILE);
@@ -120,7 +110,7 @@ public class App {
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
                     APIServiceForWrite + "\n\n");
             myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
-            myWriter.write("웹 브라우저 별 사용비율\n\n" + orderedMapWebBrowser + "\n" +
+            myWriter.write("웹 브라우저 별 사용비율\n\n" + orderedWebBrowserMap + "\n" +
                     "IE : " + "\n" +
                     "Firefox : " + "\n" +
                     "Safari : " + "\n" +
@@ -133,5 +123,11 @@ public class App {
             System.out.println("문제가 발생했어요.");
             e.printStackTrace();
         }
+    }
+    public static Map<String, Integer> makeOrderedMap(Map<String, Integer> map) {
+        return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
     }
 }
