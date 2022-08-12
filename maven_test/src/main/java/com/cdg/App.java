@@ -82,8 +82,7 @@ public class App {
         final String webBrowserForWrite = entryIteratorWebBrowser.next().getKey();
         Map.Entry<String, Integer> entryWebBrowser1 = entryIteratorWebBrowser.next();
 
-        double sample =(double)Math.round(((double)(entryWebBrowser1.getValue())/(double)((logCount))*100)*100)/100;
-        System.out.println(webBrowserForWrite + " " + sample + " " + webBrowserForWrite);
+        System.out.println(webBrowserForWrite + " " + getPercentage(entryWebBrowser1, logCount) + " " + webBrowserForWrite);
 
         System.out.println(webBrowserForWrite + entryIteratorWebBrowser.next().getValue());
 
@@ -129,5 +128,8 @@ public class App {
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
+    }
+    public static double getPercentage (Map.Entry<String, Integer> entryWebBrowser1, int logCount) {
+        return (double)Math.round(((double)(entryWebBrowser1.getValue())/(double)((logCount))*100)*100)/100;
     }
 }
