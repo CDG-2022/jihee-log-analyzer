@@ -1,7 +1,10 @@
 package com.cdg;
 
+import input.Reader;
 import org.apache.commons.lang3.StringUtils;
 import parser.Parser;
+import parser.Utils;
+import input.Reader;
 
 import java.io.File;  // Import the File class
 import java.io.FileWriter;   // Import the FileWriter class
@@ -28,36 +31,8 @@ public class App {
     private static int serverCodeCount404 = 0;
 
     public static void main(String[] args) {
-        String data = "";
-        int logCount = 0;
 
-        try {
-            File myObj = new File(INPUT_FILE);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                data = myReader.nextLine();
-
-                Parser parser = new Parser();
-                parser.parse(data);
-
-                serverCodeCount10 = serverCodeCount10 + StringUtils.countMatches(data, "[10]");
-                serverCodeCount200 = serverCodeCount200 + StringUtils.countMatches(data, "[200]");
-                serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(data, "[404]");
-
-                String[] arrayData = StringUtils.substringsBetween(data, "[", "]");
-                API_KEY.put(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), API_KEY.getOrDefault(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), 0) + 1);
-                API_SERVICE.put(StringUtils.substringBetween(arrayData[1], "search/", "?"), API_SERVICE.getOrDefault(StringUtils.substringBetween(arrayData[1], "search/", "?"), 0) + 1);
-                PEAK_TIME.put(arrayData[3].substring(0, arrayData[3].length()-3), PEAK_TIME.getOrDefault(arrayData[3].substring(0, arrayData[3].length()-3), 0) + 1);
-                WEB_BROWSER.put(arrayData[2], WEB_BROWSER.getOrDefault(arrayData[2], 0) + 1);
-
-                logCount++;
-                System.out.println(data);
-            }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("찾는 파일이 없어요!");
-            e.printStackTrace();
-        }
+        Reader.fileReader();
 
         Map<String, Integer> orderedApiKeyMap = makeOrderedMap(API_KEY);
         Map<String, Integer> orderedApiServiceMap = makeOrderedMap(API_SERVICE);
@@ -79,7 +54,6 @@ public class App {
         final String peakTimeForWrite = entryIteratorPeakTime.next().getKey();
 
         final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedWebBrowserMap.entrySet().iterator();
-        //final String webBrowserForWrite = entryIteratorWebBrowser.next().getKey();
         Map.Entry<String, Integer> entryWebBrowser0 = entryIteratorWebBrowser.next();
         Map.Entry<String, Integer> entryWebBrowser1 = entryIteratorWebBrowser.next();
         Map.Entry<String, Integer> entryWebBrowser2 = entryIteratorWebBrowser.next();
@@ -106,12 +80,12 @@ public class App {
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
                     APIServiceForWrite + "\n\n");
             myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
-            myWriter.write("웹 브라우저 별 사용비율\n\n" +
-                    entryWebBrowser0.getKey() + " : " + getPercentage(entryWebBrowser0, logCount) + "\n" +
-                    entryWebBrowser1.getKey() + " : " + getPercentage(entryWebBrowser1, logCount) + "\n" +
-                    entryWebBrowser2.getKey() + " : " + getPercentage(entryWebBrowser2, logCount) + "\n" +
-                    entryWebBrowser3.getKey() + " : " + getPercentage(entryWebBrowser3, logCount) + "\n" +
-                    entryWebBrowser4.getKey() + " : " + getPercentage(entryWebBrowser4, logCount));
+            myWriter.write("웹 브라우저 별 사용비율\n\n" + orderedWebBrowserMap +
+                    entryWebBrowser0.getKey() + " : " + Utils.getPercentage(entryWebBrowser0, logCount) + "\n" +
+                    entryWebBrowser1.getKey() + " : " + Utils.getPercentage(entryWebBrowser1, logCount) + "\n" +
+                    entryWebBrowser2.getKey() + " : " + Utils.getPercentage(entryWebBrowser2, logCount) + "\n" +
+                    entryWebBrowser3.getKey() + " : " + Utils.getPercentage(entryWebBrowser3, logCount) + "\n" +
+                    entryWebBrowser4.getKey() + " : " + Utils.getPercentage(entryWebBrowser4, logCount));
 
             myWriter.close();
             System.out.println("변경사항을 저장했어요!");
@@ -125,8 +99,6 @@ public class App {
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
-    }
-    public static String getPercentage (Map.Entry<String, Integer> entryWebBrowser, int logCount) {
-        return ((double)Math.round(((double)(entryWebBrowser.getValue())/(double)((logCount))*100)*100)/100)+"%";
+         }
     }
 }
