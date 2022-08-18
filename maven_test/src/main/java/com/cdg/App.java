@@ -23,12 +23,13 @@ public class App {
     private static final Map<String, Integer> PEAK_TIME = new HashMap<>();
     private static final Map<String, Integer> WEB_BROWSER = new HashMap<>();
 
+    private static int serverCodeCount10 = 0;
+    private static int serverCodeCount200 = 0;
+    private static int serverCodeCount404 = 0;
+
     public static void main(String[] args) {
         String data = "";
         int logCount = 0;
-        int serverCodeCount10 = 0;
-        int serverCodeCount200 = 0;
-        int serverCodeCount404 = 0;
 
         try {
             File myObj = new File(INPUT_FILE);
@@ -38,7 +39,6 @@ public class App {
 
                 Parser parser = new Parser();
                 parser.parse(data);
-
 
                 serverCodeCount10 = serverCodeCount10 + StringUtils.countMatches(data, "[10]");
                 serverCodeCount200 = serverCodeCount200 + StringUtils.countMatches(data, "[200]");
@@ -79,15 +79,12 @@ public class App {
         final String peakTimeForWrite = entryIteratorPeakTime.next().getKey();
 
         final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedWebBrowserMap.entrySet().iterator();
-        final String webBrowserForWrite = entryIteratorWebBrowser.next().getKey();
+        //final String webBrowserForWrite = entryIteratorWebBrowser.next().getKey();
+        Map.Entry<String, Integer> entryWebBrowser0 = entryIteratorWebBrowser.next();
         Map.Entry<String, Integer> entryWebBrowser1 = entryIteratorWebBrowser.next();
-
-        System.out.println(webBrowserForWrite + " " + getPercentage(entryWebBrowser1, logCount) + " " + webBrowserForWrite);
-
-        System.out.println(webBrowserForWrite + entryIteratorWebBrowser.next().getValue());
-
-
-        System.out.println("웹 브라우저 별 사용비율\n\n" + orderedWebBrowserMap + "\n");
+        Map.Entry<String, Integer> entryWebBrowser2 = entryIteratorWebBrowser.next();
+        Map.Entry<String, Integer> entryWebBrowser3 = entryIteratorWebBrowser.next();
+        Map.Entry<String, Integer> entryWebBrowser4 = entryIteratorWebBrowser.next();
 
         try {
             File myObj = new File(OUTPUT_FILE);
@@ -109,12 +106,12 @@ public class App {
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
                     APIServiceForWrite + "\n\n");
             myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
-            myWriter.write("웹 브라우저 별 사용비율\n\n" + orderedWebBrowserMap + "\n" +
-                    "IE : " + "\n" +
-                    "Firefox : " + "\n" +
-                    "Safari : " + "\n" +
-                    "Chrome : " + "\n" +
-                    "Opera : ");
+            myWriter.write("웹 브라우저 별 사용비율\n\n" +
+                    entryWebBrowser0.getKey() + " : " + getPercentage(entryWebBrowser0, logCount) + "\n" +
+                    entryWebBrowser1.getKey() + " : " + getPercentage(entryWebBrowser1, logCount) + "\n" +
+                    entryWebBrowser2.getKey() + " : " + getPercentage(entryWebBrowser2, logCount) + "\n" +
+                    entryWebBrowser3.getKey() + " : " + getPercentage(entryWebBrowser3, logCount) + "\n" +
+                    entryWebBrowser4.getKey() + " : " + getPercentage(entryWebBrowser4, logCount));
 
             myWriter.close();
             System.out.println("변경사항을 저장했어요!");
@@ -129,7 +126,7 @@ public class App {
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
     }
-    public static double getPercentage (Map.Entry<String, Integer> entryWebBrowser1, int logCount) {
-        return (double)Math.round(((double)(entryWebBrowser1.getValue())/(double)((logCount))*100)*100)/100;
+    public static String getPercentage (Map.Entry<String, Integer> entryWebBrowser, int logCount) {
+        return ((double)Math.round(((double)(entryWebBrowser.getValue())/(double)((logCount))*100)*100)/100)+"%";
     }
 }
