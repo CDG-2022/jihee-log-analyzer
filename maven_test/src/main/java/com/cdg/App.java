@@ -16,29 +16,18 @@ import java.util.stream.Collectors;
 
 import static input.Reader.logCount;
 
-/**
- * Hello world!
- */
 public class App {
 
     private static final String OUTPUT_FILE = "output.log";
 
-    private static final Map<String, Integer> API_KEY = new HashMap<>();
-    private static final Map<String, Integer> API_SERVICE = new HashMap<>();
-    private static final Map<String, Integer> PEAK_TIME = new HashMap<>();
-    private static final Map<String, Integer> WEB_BROWSER = new HashMap<>();
-
-    private static int serverCodeCount10 = 0;
-    private static int serverCodeCount200 = 0;
-    private static int serverCodeCount404 = 0;
-
     public static void main(String[] args) {
+
         Reader.fileReader();
 
-        Map<String, Integer> orderedApiKeyMap = makeOrderedMap(API_KEY);
-        Map<String, Integer> orderedApiServiceMap = makeOrderedMap(API_SERVICE);
-        Map<String, Integer> orderedPeakTimeMap = makeOrderedMap(PEAK_TIME);
-        Map<String, Integer> orderedWebBrowserMap = makeOrderedMap(WEB_BROWSER);
+        Map<String, Integer> orderedApiKeyMap = makeOrderedMap(Reader.API_KEY);
+        Map<String, Integer> orderedApiServiceMap = makeOrderedMap(Reader.API_SERVICE);
+        Map<String, Integer> orderedPeakTimeMap = makeOrderedMap(Reader.PEAK_TIME);
+        Map<String, Integer> orderedWebBrowserMap = makeOrderedMap(Reader.WEB_BROWSER);
 
         final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedApiKeyMap.entrySet().iterator();
         final String apiKeyForWrite = entryIteratorApiKey.next().getKey();
@@ -55,11 +44,32 @@ public class App {
         final String peakTimeForWrite = entryIteratorPeakTime.next().getKey();
 
         final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedWebBrowserMap.entrySet().iterator();
-        Map.Entry<String, Integer> entryWebBrowser0 = entryIteratorWebBrowser.next();
-        Map.Entry<String, Integer> entryWebBrowser1 = entryIteratorWebBrowser.next();
-        Map.Entry<String, Integer> entryWebBrowser2 = entryIteratorWebBrowser.next();
-        Map.Entry<String, Integer> entryWebBrowser3 = entryIteratorWebBrowser.next();
-        Map.Entry<String, Integer> entryWebBrowser4 = entryIteratorWebBrowser.next();
+
+        ArrayList<String> entryWebBrowserKeyList = new ArrayList<String>();
+        ListIterator<String> entryWebBrowserKeyListIterator = entryWebBrowserKeyList.listIterator();
+
+        ArrayList<Integer> entryWebBrowserValueList = new ArrayList<Integer>();
+        ListIterator<Integer> entryWebBrowserValueListIterator = entryWebBrowserValueList.listIterator();
+
+
+        while(entryIteratorWebBrowser.hasNext()) {
+            entryWebBrowserKeyList.add(entryIteratorWebBrowser.next().getKey());
+            System.out.println(entryWebBrowserKeyList);
+        }
+        System.out.println();
+
+        Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser1 = orderedWebBrowserMap.entrySet().iterator();
+
+        while(entryIteratorWebBrowser1.hasNext()) {
+            entryWebBrowserValueList.add(entryIteratorWebBrowser1.next().getValue());
+            System.out.println(entryWebBrowserValueList);
+        }
+
+        System.out.println("웹 브라우저 별 사용비율\n\n");
+
+        while(entryWebBrowserKeyListIterator.hasNext()) {
+            System.out.println(entryWebBrowserKeyListIterator.next() + " : " + Utils.getPercentage(entryWebBrowserValueListIterator.next(), logCount));
+        }
 
         Writer.fileWriter();
     }

@@ -10,17 +10,17 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Reader {
-    private static final String INPUT_FILE = "input.log";
-    private static String data = "";
-    private static int serverCodeCount10 = 0;
-    private static int serverCodeCount200 = 0;
-    private static int serverCodeCount404 = 0;
+    public static final String INPUT_FILE = "input.log";
+    public static String data = "";
+    public static int serverCodeCount10 = 0;
+    public static int serverCodeCount200 = 0;
+    public static int serverCodeCount404 = 0;
     public static int logCount = 0;
 
-    private static final Map<String, Integer> API_KEY = new HashMap<>();
-    private static final Map<String, Integer> API_SERVICE = new HashMap<>();
-    private static final Map<String, Integer> PEAK_TIME = new HashMap<>();
-    private static final Map<String, Integer> WEB_BROWSER = new HashMap<>();
+    public static final Map<String, Integer> API_KEY = new HashMap<>();
+    public static final Map<String, Integer> API_SERVICE = new HashMap<>();
+    public static final Map<String, Integer> PEAK_TIME = new HashMap<>();
+    public static final Map<String, Integer> WEB_BROWSER = new HashMap<>();
 
     public static void fileReader() {
         try {
