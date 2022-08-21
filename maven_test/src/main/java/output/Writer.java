@@ -1,6 +1,7 @@
 package output;
 
 import lombok.Data;
+import parser.Utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -36,11 +37,11 @@ public class Writer {
                     APIServiceForWrite + "\n\n");
             myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
             myWriter.write("웹 브라우저 별 사용비율\n\n" +
-                    "IE : " + "\n" +
-                    "Firefox : " + "\n" +
-                    "Safari : " + "\n" +
-                    "Chrome : " + "\n" +
-                    "Opera : ");
+                    entryWebBrowser0.getKey() + " : " + Utils.getPercentage(entryWebBrowser0.getValue(), logCount) + "\n" +
+                    entryWebBrowser1.getKey() + " : " + Utils.getPercentage(entryWebBrowser1.getValue(), logCount) + "\n" +
+                    entryWebBrowser2.getKey() + " : " + Utils.getPercentage(entryWebBrowser2.getValue(), logCount) + "\n" +
+                    entryWebBrowser3.getKey() + " : " + Utils.getPercentage(entryWebBrowser3.getValue(), logCount) + "\n" +
+                    entryWebBrowser4.getKey() + " : " + Utils.getPercentage(entryWebBrowser4.getValue(), logCount));
 
             myWriter.close();
             System.out.println("변경사항을 저장했어요!");
