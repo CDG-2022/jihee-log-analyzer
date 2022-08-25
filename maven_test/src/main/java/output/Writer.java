@@ -1,7 +1,8 @@
 package output;
 
 import lombok.Data;
-import parser.Utils;
+import parser.*;
+import input.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -26,16 +27,19 @@ public class Writer {
 
             FileWriter myWriter = new FileWriter(OUTPUT_FILE);
 
-            myWriter.write("로그 수: " + logCount + "\n\n");
+            myWriter.write("로그 수: " + Reader.logCount + "\n\n");
 
             myWriter.write("최다호출 APIKEY"+ "\n\n" + apiKeyForWrite + "\n\n");
             myWriter.write("상태코드 별 횟수\n\n" +
-                    "10 : " + serverCodeCount10 + "\n" +
-                    "200 : " + serverCodeCount200 + "\n" +
-                    "404 : " + serverCodeCount404 + "\n\n");
+                    "10 : " + Parser.serverCodeCount10 + "\n" +
+                    "200 : " + Parser.serverCodeCount200 + "\n" +
+                    "404 : " + Parser.serverCodeCount404 + "\n\n");
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
                     APIServiceForWrite + "\n\n");
             myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
+
+
+
             myWriter.write("웹 브라우저 별 사용비율\n\n" +
                     entryWebBrowser0.getKey() + " : " + Utils.getPercentage(entryWebBrowser0.getValue(), logCount) + "\n" +
                     entryWebBrowser1.getKey() + " : " + Utils.getPercentage(entryWebBrowser1.getValue(), logCount) + "\n" +

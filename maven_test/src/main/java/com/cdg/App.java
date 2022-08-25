@@ -24,10 +24,10 @@ public class App {
 
         Reader.fileReader();
 
-        Map<String, Integer> orderedApiKeyMap = makeOrderedMap(Reader.API_KEY);
-        Map<String, Integer> orderedApiServiceMap = makeOrderedMap(Reader.API_SERVICE);
-        Map<String, Integer> orderedPeakTimeMap = makeOrderedMap(Reader.PEAK_TIME);
-        Map<String, Integer> orderedWebBrowserMap = makeOrderedMap(Reader.WEB_BROWSER);
+        Map<String, Integer> orderedApiKeyMap = Parser.makeOrderedMap(Parser.API_KEY);
+        Map<String, Integer> orderedApiServiceMap = Parser.makeOrderedMap(Parser.API_SERVICE);
+        Map<String, Integer> orderedPeakTimeMap = Parser.makeOrderedMap(Parser.PEAK_TIME);
+        Map<String, Integer> orderedWebBrowserMap = Parser.makeOrderedMap(Parser.WEB_BROWSER);
 
         final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedApiKeyMap.entrySet().iterator();
         final String apiKeyForWrite = entryIteratorApiKey.next().getKey();
@@ -72,11 +72,5 @@ public class App {
         }
 
         Writer.fileWriter();
-    }
-    public static Map<String, Integer> makeOrderedMap(Map<String, Integer> map) {
-        return map.entrySet()
-                .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
     }
 }

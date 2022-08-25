@@ -9,9 +9,10 @@ import org.junit.Test;
  */
 public class AppTest 
 {
-    /**
-     * Rigorous Test :-)
-     */
+
+    // given
+    // when
+    // then
     @Test
     public void shouldAnswerWithTrue()
     {
