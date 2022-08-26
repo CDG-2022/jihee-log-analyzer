@@ -22,9 +22,7 @@ public class Parser {
 
     public void parse(String line) {
 
-        serverCodeCount10 = serverCodeCount10 + StringUtils.countMatches(line, "[10]");
-        serverCodeCount200 = serverCodeCount200 + StringUtils.countMatches(line, "[200]");
-        serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(line, "[404]");
+        getServerCode(line);
 
         String[] arrayData = StringUtils.substringsBetween(line, "[", "]");
         API_KEY.put(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), API_KEY.getOrDefault(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), 0) + 1);
@@ -42,18 +40,42 @@ public class Parser {
 
         getApiKey(orderedApiKeyMap);
 
+        getApiService(orderedApiServiceMap);
 
+        getPeakTime(orderedPeakTimeMap);
+
+        getWebBrowser(orderedWebBrowserMap);
+
+        // todo 파싱
+    }
+
+    public static void getServerCode(String line) {
+        serverCodeCount10 = serverCodeCount10 + StringUtils.countMatches(line, "[10]");
+        serverCodeCount200 = serverCodeCount200 + StringUtils.countMatches(line, "[200]");
+        serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(line, "[404]");
+    }
+
+    public static String getApiKey(Map<String, Integer> orderedApiKeyMap) {
+        final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedApiKeyMap.entrySet().iterator();
+        return entryIteratorApiKey.next().getKey();
+    }
+
+    public static String getApiService(Map<String, Integer> orderedApiServiceMap) {
         final Iterator<Map.Entry<String, Integer>> entryIteratorAPIService = orderedApiServiceMap.entrySet().iterator();
         Map.Entry<String, Integer> entryAPIService1 = entryIteratorAPIService.next();
         Map.Entry<String, Integer> entryAPIService2 = entryIteratorAPIService.next();
         Map.Entry<String, Integer> entryAPIService3 = entryIteratorAPIService.next();
-        final String APIServiceForWrite = entryAPIService1.getKey() + " : " + entryAPIService1.getValue() +
+        return entryAPIService1.getKey() + " : " + entryAPIService1.getValue() +
                 "\n" + entryAPIService2.getKey() + " : " + entryAPIService2.getValue() +
                 "\n" + entryAPIService3.getKey() + " : " + entryAPIService3.getValue();
+    }
 
+    public static String getPeakTime(Map<String, Integer> orderedPeakTimeMap) {
         final Iterator<Map.Entry<String, Integer>> entryIteratorPeakTime = orderedPeakTimeMap.entrySet().iterator();
-        final String peakTimeForWrite = entryIteratorPeakTime.next().getKey();
+        return entryIteratorPeakTime.next().getKey();
+    }
 
+    public static void getWebBrowser(Map<String, Integer> orderedWebBrowserMap) {
         final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedWebBrowserMap.entrySet().iterator();
 
         ArrayList<String> entryWebBrowserKeyList = new ArrayList<String>();
@@ -81,28 +103,6 @@ public class Parser {
         while(entryWebBrowserKeyListIterator.hasNext()) {
             System.out.println(entryWebBrowserKeyListIterator.next() + " : " + Utils.getPercentage(entryWebBrowserValueListIterator.next(), logCount));
         }
-        // todo 파싱
-    }
-
-    public static String getApiKey(Map<String, Integer> orderedApiKeyMap) {
-        final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedApiKeyMap.entrySet().iterator();
-        return entryIteratorApiKey.next().getKey();
-    }
-
-    public static void getServerCode() {
-
-    }
-
-    public static void getApiServiceId() {
-
-    }
-
-    public static void getPeakTime() {
-
-    }
-
-    public static void getWebBrowser() {
-
     }
 
     public static Map<String, Integer> makeOrderedMap(Map<String, Integer> map) {
