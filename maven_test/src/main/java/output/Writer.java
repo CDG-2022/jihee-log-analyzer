@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static input.Reader.logCount;
+
 @Data
 public class Writer {
 
@@ -29,7 +31,7 @@ public class Writer {
 
             myWriter.write("로그 수: " + Reader.logCount + "\n\n");
 
-            myWriter.write("최다호출 APIKEY"+ "\n\n" + apiKeyForWrite + "\n\n");
+            myWriter.write("최다호출 APIKEY" + "\n\n" + apiKeyForWrite + "\n\n");
             myWriter.write("상태코드 별 횟수\n\n" +
                     "10 : " + Parser.serverCodeCount10 + "\n" +
                     "200 : " + Parser.serverCodeCount200 + "\n" +
@@ -37,16 +39,10 @@ public class Writer {
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
                     APIServiceForWrite + "\n\n");
             myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
-
-
-
-            myWriter.write("웹 브라우저 별 사용비율\n\n" +
-                    entryWebBrowser0.getKey() + " : " + Utils.getPercentage(entryWebBrowser0.getValue(), logCount) + "\n" +
-                    entryWebBrowser1.getKey() + " : " + Utils.getPercentage(entryWebBrowser1.getValue(), logCount) + "\n" +
-                    entryWebBrowser2.getKey() + " : " + Utils.getPercentage(entryWebBrowser2.getValue(), logCount) + "\n" +
-                    entryWebBrowser3.getKey() + " : " + Utils.getPercentage(entryWebBrowser3.getValue(), logCount) + "\n" +
-                    entryWebBrowser4.getKey() + " : " + Utils.getPercentage(entryWebBrowser4.getValue(), logCount));
-
+            myWriter.write("웹 브라우저 별 사용비율\n\n");
+            while (entryWebBrowserKeyListIterator.hasNext()) {
+                myWriter.write(entryWebBrowserKeyListIterator.next() + " : " + Utils.getPercentage(entryWebBrowserValueListIterator.next(), logCount));
+            }
             myWriter.close();
             System.out.println("변경사항을 저장했어요!");
         } catch (IOException e) {
