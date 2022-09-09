@@ -17,9 +17,6 @@ import java.util.stream.Collectors;
 import static input.Reader.logCount;
 
 public class App {
-
-    private static final String OUTPUT_FILE = "output.log";
-
     public static void main(String[] args) {
 
         Reader.fileReader();
