@@ -31,14 +31,14 @@ public class Writer {
 
             myWriter.write("로그 수: " + Reader.logCount + "\n\n");
 
-            myWriter.write("최다호출 APIKEY" + "\n\n" + apiKeyForWrite + "\n\n");
+            myWriter.write("최다호출 APIKEY" + "\n\n" + Parser.getApiKeyForWrite() + "\n\n");
             myWriter.write("상태코드 별 횟수\n\n" +
                     "10 : " + Parser.serverCodeCount10 + "\n" +
                     "200 : " + Parser.serverCodeCount200 + "\n" +
                     "404 : " + Parser.serverCodeCount404 + "\n\n");
             myWriter.write("상위 3개의 API ServiceID와 각각의 요청 수\n\n" +
-                    APIServiceForWrite + "\n\n");
-            myWriter.write("피크 시간대\n\n" + peakTimeForWrite + "\n\n");
+                    Parser.getAPIServiceForWrite() + "\n\n");
+            myWriter.write("피크 시간대\n\n" + Parser.getPeakTimeForWrite() + "\n\n");
             myWriter.write("웹 브라우저 별 사용비율\n\n");
             while (entryWebBrowserKeyListIterator.hasNext()) {
                 myWriter.write(entryWebBrowserKeyListIterator.next() + " : " + Utils.getPercentage(entryWebBrowserValueListIterator.next(), logCount));

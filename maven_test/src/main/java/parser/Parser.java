@@ -1,7 +1,6 @@
 package parser;
 
-import lombok.Data;
-import model.ParsedLog;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -9,7 +8,7 @@ import java.util.stream.Collectors;
 
 import static input.Reader.logCount;
 
-@Data
+@Getter
 public class Parser {
     public static final Map<String, Integer> API_KEY = new HashMap<>();
     public static final Map<String, Integer> API_SERVICE = new HashMap<>();
@@ -20,7 +19,25 @@ public class Parser {
     public static int serverCodeCount200 = 0;
     public static int serverCodeCount404 = 0;
 
-    public void parse(String line) {
+    public static String apiKeyForWrite;
+    public static String APIServiceForWrite;
+    public static String peakTimeForWrite;
+
+
+
+    public static String getApiKeyForWrite() {
+        return apiKeyForWrite;
+    }
+    public static String getAPIServiceForWrite() {
+        return APIServiceForWrite;
+    }
+
+    public static String getPeakTimeForWrite() {
+        return peakTimeForWrite;
+    }
+
+
+    public static void oneLineParse(String line) {
 
         getServerCode(line);
 
@@ -33,20 +50,17 @@ public class Parser {
         input.Reader.logCount++;
         System.out.println(line);
 
-        Map<String, Integer> orderedApiKeyMap = makeOrderedMap(Parser.API_KEY);
-        Map<String, Integer> orderedApiServiceMap = makeOrderedMap(Parser.API_SERVICE);
-        Map<String, Integer> orderedPeakTimeMap = makeOrderedMap(Parser.PEAK_TIME);
-        Map<String, Integer> orderedWebBrowserMap = makeOrderedMap(Parser.WEB_BROWSER);
-
-        getApiKey(orderedApiKeyMap);
-
-        getApiService(orderedApiServiceMap);
-
-        getPeakTime(orderedPeakTimeMap);
-
-        getWebBrowser(orderedWebBrowserMap);
-
         // todo 파싱
+    }
+
+    public static void parse() {
+        apiKeyForWrite = getApiKey();
+
+        APIServiceForWrite = getApiService();
+
+        peakTimeForWrite = getPeakTime();
+
+        getWebBrowser();
     }
 
     public static void getServerCode(String line) {
@@ -55,12 +69,15 @@ public class Parser {
         serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(line, "[404]");
     }
 
-    public static String getApiKey(Map<String, Integer> orderedApiKeyMap) {
+    public static String getApiKey() {
+        Map<String, Integer> orderedApiKeyMap = makeOrderedMap(Parser.API_KEY);
         final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedApiKeyMap.entrySet().iterator();
         return entryIteratorApiKey.next().getKey();
     }
 
-    public static String getApiService(Map<String, Integer> orderedApiServiceMap) {
+    public static String getApiService() {
+        Map<String, Integer> orderedApiServiceMap = makeOrderedMap(Parser.API_SERVICE);
+
         final Iterator<Map.Entry<String, Integer>> entryIteratorAPIService = orderedApiServiceMap.entrySet().iterator();
         Map.Entry<String, Integer> entryAPIService1 = entryIteratorAPIService.next();
         Map.Entry<String, Integer> entryAPIService2 = entryIteratorAPIService.next();
@@ -70,12 +87,16 @@ public class Parser {
                 "\n" + entryAPIService3.getKey() + " : " + entryAPIService3.getValue();
     }
 
-    public static String getPeakTime(Map<String, Integer> orderedPeakTimeMap) {
+    public static String getPeakTime() {
+        Map<String, Integer> orderedPeakTimeMap = makeOrderedMap(Parser.PEAK_TIME);
+
         final Iterator<Map.Entry<String, Integer>> entryIteratorPeakTime = orderedPeakTimeMap.entrySet().iterator();
         return entryIteratorPeakTime.next().getKey();
     }
 
-    public static void getWebBrowser(Map<String, Integer> orderedWebBrowserMap) {
+    public static void getWebBrowser() {
+        Map<String, Integer> orderedWebBrowserMap = makeOrderedMap(Parser.WEB_BROWSER);
+
         final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedWebBrowserMap.entrySet().iterator();
 
         ArrayList<String> entryWebBrowserKeyList = new ArrayList<String>();
@@ -85,7 +106,7 @@ public class Parser {
         ListIterator<Integer> entryWebBrowserValueListIterator = entryWebBrowserValueList.listIterator();
 
 
-        while(entryIteratorWebBrowser.hasNext()) {
+        while (entryIteratorWebBrowser.hasNext()) {
             entryWebBrowserKeyList.add(entryIteratorWebBrowser.next().getKey());
             System.out.println(entryWebBrowserKeyList);
         }
@@ -93,14 +114,14 @@ public class Parser {
 
         Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser1 = orderedWebBrowserMap.entrySet().iterator();
 
-        while(entryIteratorWebBrowser1.hasNext()) {
+        while (entryIteratorWebBrowser1.hasNext()) {
             entryWebBrowserValueList.add(entryIteratorWebBrowser1.next().getValue());
             System.out.println(entryWebBrowserValueList);
         }
 
         System.out.println("웹 브라우저 별 사용비율\n\n");
 
-        while(entryWebBrowserKeyListIterator.hasNext()) {
+        while (entryWebBrowserKeyListIterator.hasNext()) {
             System.out.println(entryWebBrowserKeyListIterator.next() + " : " + Utils.getPercentage(entryWebBrowserValueListIterator.next(), logCount));
         }
     }

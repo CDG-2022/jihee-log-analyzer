@@ -1,12 +1,9 @@
 package input;
 
-import org.apache.commons.lang3.StringUtils;
 import parser.Parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Reader {
@@ -16,12 +13,11 @@ public class Reader {
 
     public static void fileReader() {
         try {
-            File myObj = new File(INPUT_FILE);
+            File myObj = new File(Reader.INPUT_FILE);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
                 data = myReader.nextLine();
-                Parser parser = new Parser();
-                parser.parse(data);
+                Parser.oneLineParse(data);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
