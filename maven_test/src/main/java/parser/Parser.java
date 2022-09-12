@@ -1,12 +1,135 @@
 package parser;
 
-import lombok.Data;
-import model.ParsedLog;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
-@Data
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static input.Reader.logCount;
+
+@Getter
 public class Parser {
+    public static final Map<String, Integer> API_KEY = new HashMap<>();
+    public static final Map<String, Integer> API_SERVICE = new HashMap<>();
+    public static final Map<String, Integer> PEAK_TIME = new HashMap<>();
+    public static final Map<String, Integer> WEB_BROWSER = new HashMap<>();
 
-    public void parse(String line) {
+    public static int serverCodeCount10 = 0;
+    public static int serverCodeCount200 = 0;
+    public static int serverCodeCount404 = 0;
+
+    public static String apiKeyForWrite;
+    public static String APIServiceForWrite;
+    public static String peakTimeForWrite;
+
+
+
+    public static String getApiKeyForWrite() {
+        return apiKeyForWrite;
+    }
+    public static String getAPIServiceForWrite() {
+        return APIServiceForWrite;
+    }
+
+    public static String getPeakTimeForWrite() {
+        return peakTimeForWrite;
+    }
+
+
+    public static void oneLineParse(String line) {
+
+        getServerCode(line);
+
+        String[] arrayData = StringUtils.substringsBetween(line, "[", "]");
+        API_KEY.put(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), API_KEY.getOrDefault(StringUtils.substringBetween(arrayData[1], "apikey=", "&"), 0) + 1);
+        API_SERVICE.put(StringUtils.substringBetween(arrayData[1], "search/", "?"), API_SERVICE.getOrDefault(StringUtils.substringBetween(arrayData[1], "search/", "?"), 0) + 1);
+        PEAK_TIME.put(arrayData[3].substring(0, arrayData[3].length() - 3), PEAK_TIME.getOrDefault(arrayData[3].substring(0, arrayData[3].length() - 3), 0) + 1);
+        WEB_BROWSER.put(arrayData[2], WEB_BROWSER.getOrDefault(arrayData[2], 0) + 1);
+
+        input.Reader.logCount++;
+        System.out.println(line);
+
         // todo 파싱
+    }
+
+    public static void parse() {
+        apiKeyForWrite = getApiKey();
+
+        APIServiceForWrite = getApiService();
+
+        peakTimeForWrite = getPeakTime();
+
+        getWebBrowser();
+    }
+
+    public static void getServerCode(String line) {
+        serverCodeCount10 = serverCodeCount10 + StringUtils.countMatches(line, "[10]");
+        serverCodeCount200 = serverCodeCount200 + StringUtils.countMatches(line, "[200]");
+        serverCodeCount404 = serverCodeCount404 + StringUtils.countMatches(line, "[404]");
+    }
+
+    public static String getApiKey() {
+        Map<String, Integer> orderedApiKeyMap = makeOrderedMap(Parser.API_KEY);
+        final Iterator<Map.Entry<String, Integer>> entryIteratorApiKey = orderedApiKeyMap.entrySet().iterator();
+        return entryIteratorApiKey.next().getKey();
+    }
+
+    public static String getApiService() {
+        Map<String, Integer> orderedApiServiceMap = makeOrderedMap(Parser.API_SERVICE);
+
+        final Iterator<Map.Entry<String, Integer>> entryIteratorAPIService = orderedApiServiceMap.entrySet().iterator();
+        Map.Entry<String, Integer> entryAPIService1 = entryIteratorAPIService.next();
+        Map.Entry<String, Integer> entryAPIService2 = entryIteratorAPIService.next();
+        Map.Entry<String, Integer> entryAPIService3 = entryIteratorAPIService.next();
+        return entryAPIService1.getKey() + " : " + entryAPIService1.getValue() +
+                "\n" + entryAPIService2.getKey() + " : " + entryAPIService2.getValue() +
+                "\n" + entryAPIService3.getKey() + " : " + entryAPIService3.getValue();
+    }
+
+    public static String getPeakTime() {
+        Map<String, Integer> orderedPeakTimeMap = makeOrderedMap(Parser.PEAK_TIME);
+
+        final Iterator<Map.Entry<String, Integer>> entryIteratorPeakTime = orderedPeakTimeMap.entrySet().iterator();
+        return entryIteratorPeakTime.next().getKey();
+    }
+
+    public static void getWebBrowser() {
+        Map<String, Integer> orderedWebBrowserMap = makeOrderedMap(Parser.WEB_BROWSER);
+
+        final Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser = orderedWebBrowserMap.entrySet().iterator();
+
+        ArrayList<String> entryWebBrowserKeyList = new ArrayList<String>();
+        ListIterator<String> entryWebBrowserKeyListIterator = entryWebBrowserKeyList.listIterator();
+
+        ArrayList<Integer> entryWebBrowserValueList = new ArrayList<Integer>();
+        ListIterator<Integer> entryWebBrowserValueListIterator = entryWebBrowserValueList.listIterator();
+
+
+        while (entryIteratorWebBrowser.hasNext()) {
+            entryWebBrowserKeyList.add(entryIteratorWebBrowser.next().getKey());
+            System.out.println(entryWebBrowserKeyList);
+        }
+        System.out.println();
+
+        Iterator<Map.Entry<String, Integer>> entryIteratorWebBrowser1 = orderedWebBrowserMap.entrySet().iterator();
+
+        while (entryIteratorWebBrowser1.hasNext()) {
+            entryWebBrowserValueList.add(entryIteratorWebBrowser1.next().getValue());
+            System.out.println(entryWebBrowserValueList);
+        }
+
+        System.out.println("웹 브라우저 별 사용비율\n\n");
+
+        while (entryWebBrowserKeyListIterator.hasNext()) {
+            System.out.println(entryWebBrowserKeyListIterator.next() + " : " + Utils.getPercentage(entryWebBrowserValueListIterator.next(), logCount));
+        }
+    }
+
+    public static Map<String, Integer> makeOrderedMap(Map<String, Integer> map) {
+        return map.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (oldValue, newValue) -> newValue, LinkedHashMap::new));
     }
 }
